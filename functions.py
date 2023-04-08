@@ -21,14 +21,15 @@ def scrape_book(book_url):
 
 url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
 
-rows = [scrape_book(url)]
-with open('live_data.csv', mode='w') as csv_file:
-    fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
+def data_book_csv():
+    rows = [scrape_book(url)]
+    with open('live_data.csv', mode='w') as csv_file:
+        fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
 
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-    writer.writeheader()
-    writer.writerow(scrape_book(url))
+        writer.writeheader()
+        writer.writerow(scrape_book(url))
 
 
 def scrape_category(category_url):

@@ -30,6 +30,7 @@ def data_book_csv():
 
         writer.writeheader()
         writer.writerow(scrape_book(url))
+data_book_csv()
 
 
 def scrape_category(category_url):

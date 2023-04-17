@@ -26,7 +26,7 @@ def data_book_csv():
     with open('live_data.csv', mode='w') as csv_file:
         fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
 
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames,deliiter=',')
 
         writer.writeheader()
         writer.writerow(scrape_book(url))

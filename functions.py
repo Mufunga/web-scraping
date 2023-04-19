@@ -61,20 +61,4 @@ def scrape_category(category_url):
 
 page_url = "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
 urls = scrape_category(page_url)
-
-def scrape_category_uls():
-    category_uls = []
-    response = requests.get(book_site)
-    page_cat = response.content
-    soup = BeautifulSoup(page_cat, "html.parser")
-    ul_tag = soup.find("ul", class_="nav-list")
-    li_tag = ul_tag.find_all("li")
-    for ligne in li_tag:
-        a_tag = ligne.find("a")["href"]
-        les_urls_cat = "https://books.toscrape.com/" + a_tag
-        category_uls.append(les_urls_cat)
-    return category_uls
-
-
-category_uls = scrape_category_uls()
-# print(category_uls)
+print(url)

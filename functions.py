@@ -61,8 +61,6 @@ def scrape_category(category_url):
 
 page_url = "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
 urls = scrape_category(page_url)
-book_site = "https://books.toscrape.com/"
-
 
 def scrape_category_uls():
     category_uls = []

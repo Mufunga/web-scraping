@@ -60,7 +60,7 @@ def scrape_category_books(category_url):
             lien = article.find("a")["href"]
             chemin = lien.split("../")
             book_url = "https://books.toscrape.com/catalogue/" + chemin[3]
-            print (book_urls)
+            #print (book_urls)
             book_urls.append(book_url)
         next_b = soup.find("li", class_="next")
         if next_b:

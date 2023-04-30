@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-
 def scrape_book(book_url):
     reponse = requests.get(url)
     page = reponse.content
@@ -45,6 +44,7 @@ def scrape_category_uls():
         category_uls.append(les_urls_cat)
     return category_uls
 link_categories_books= scrape_category_uls()
+link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
 #print(link_categories_books)
 
 def scrape_category_books(category_url):
@@ -72,13 +72,15 @@ def scrape_category_books(category_url):
             break
     return book_urls
 for links in link_categories_books:
-    scrape_category_books(links)
+   all_books_url=scrape_category_books(links)
+   print(all_books_url)
     
 
 
-#page_url = "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
+#page_url = "https://books.toscrape.com/catalogue/category/books_1/index.html"
 #category_urls = scrape_category_books(page_url)
+#print(category_urls)
 #for link_url in category_urls:
    # scrape_book(link_url)
     #break
-   # print(link_url)
+   #print(link_url)

@@ -30,10 +30,24 @@ def data_book_csv():
 
         writer.writeheader()
         writer.writerow(scrape_book(url))
-data_book_csv()
+#data_book_csv()
+book_site = "https://books.toscrape.com/"
+def scrape_category_uls():
+    category_uls = []
+    response = requests.get(book_site)
+    page_cat = response.content
+    soup = BeautifulSoup(page_cat, "html.parser")
+    ul_tag = soup.find("ul", class_="nav-list")
+    li_tag = ul_tag.find_all("li")
+    for ligne in li_tag:
+        a_tag = ligne.find("a")["href"]
+        les_urls_cat = "https://books.toscrape.com/" + a_tag
+        category_uls.append(les_urls_cat)
+    return category_uls
+link_categories_books= scrape_category_uls()
+#print(link_categories_books)
 
-
-def scrape_category(category_url):
+def scrape_category_books(category_url):
     book_urls = []
     a_tag_temp = "index.html"
     while True:
@@ -46,7 +60,7 @@ def scrape_category(category_url):
             lien = article.find("a")["href"]
             chemin = lien.split("../")
             book_url = "https://books.toscrape.com/catalogue/" + chemin[3]
-            # print (book_urls)
+            print (book_urls)
             book_urls.append(book_url)
         next_b = soup.find("li", class_="next")
         if next_b:
@@ -57,8 +71,14 @@ def scrape_category(category_url):
         else:
             break
     return book_urls
+for links in link_categories_books:
+    scrape_category_books(links)
+    
 
 
-page_url = "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
-urls = scrape_category(page_url)
-print(url)
+#page_url = "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
+#category_urls = scrape_category_books(page_url)
+#for link_url in category_urls:
+   # scrape_book(link_url)
+    #break
+   # print(link_url)

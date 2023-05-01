@@ -17,15 +17,12 @@ def scrape_book(book_url):
     book_data["image_url"] = soup.find("img")["src"]
     return book_data
 
-
 url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
-
-def data_book_csv():
-    rows = [scrape_book(url)]
-    with open('live_data.csv', mode='w') as csv_file:
+rows = [scrape_book(url)]
+with open('live_data.csv', mode='w') as csv_file:
         fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
 
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames,deliiter=',')
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames,delimiter=',')
 
         writer.writeheader()
         writer.writerow(scrape_book(url))
@@ -73,7 +70,8 @@ def scrape_category_books(category_url):
     return book_urls
 for links in link_categories_books:
    all_books_url=scrape_category_books(links)
-   print(all_books_url)
+   break
+   #print(all_books_url)
     
 
 

@@ -19,20 +19,6 @@ def scrape_book(book_url):
     book_data["image_url"] = soup.find("img")["src"]
     return book_data
 
-url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
-rows = [scrape_book(url)]
-with open('live_data5.csv', mode='w') as csv_file:
-        fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
-
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames,delimiter=',')
-
-        writer.writeheader()
-        writer.writerow(scrape_book(url))
-#data_book_csv()
-
-
-book_site = "https://books.toscrape.com/"
-
 def scrape_category_uls():
     category_uls = []
     response = requests.get(book_site)
@@ -45,10 +31,6 @@ def scrape_category_uls():
         les_urls_cat = "https://books.toscrape.com/" + a_tag
         category_uls.append(les_urls_cat)
     return category_uls
-
-link_categories_books= scrape_category_uls()
-link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
-#print(link_categories_books)
 
 def scrape_category_books(category_url):
     book_urls = []
@@ -74,6 +56,20 @@ def scrape_category_books(category_url):
         else:
             break
     return book_urls
+
+url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+rows = [scrape_book(url)]
+with open('live_data5.csv', mode='w') as csv_file:
+        fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
+
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames,delimiter=',')
+
+        writer.writeheader()
+        writer.writerow(scrape_book(url))
+#data_book_csv()
+link_categories_books= scrape_category_uls()
+link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
+
 if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"  in link_categories_books:
    url ="https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
    cat_books_urls=scrape_category_books(url)
@@ -81,6 +77,12 @@ if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.h
    for link_b in cat_books_urls:
        cat_books_data.append(scrape_book(link_b))
        print(cat_books_data)
+
+
+book_site = "https://books.toscrape.com/"
+
+
+#print(link_categories_books)
    #print(all_books_url)
     
 

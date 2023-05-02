@@ -7,6 +7,8 @@ def scrape_book(book_url):
     page = reponse.content
     soup = BeautifulSoup(page, "html.parser")
     td_list = soup.find_all("td")
+    print(td_list)
+    print(book_url)
     book_data = {"url": book_url, "title": soup.h1.text, "upc": td_list[0].text, "price_including_tax": td_list[3].text,
                  "price_excluding_tax": td_list[2].text, "number_available": td_list[5].text}
     p_list = soup.find_all("p")
@@ -19,7 +21,7 @@ def scrape_book(book_url):
 
 url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
 rows = [scrape_book(url)]
-with open('live_data.csv', mode='w') as csv_file:
+with open('live_data5.csv', mode='w') as csv_file:
         fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
 
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames,delimiter=',')
@@ -27,7 +29,10 @@ with open('live_data.csv', mode='w') as csv_file:
         writer.writeheader()
         writer.writerow(scrape_book(url))
 #data_book_csv()
+
+
 book_site = "https://books.toscrape.com/"
+
 def scrape_category_uls():
     category_uls = []
     response = requests.get(book_site)
@@ -40,6 +45,7 @@ def scrape_category_uls():
         les_urls_cat = "https://books.toscrape.com/" + a_tag
         category_uls.append(les_urls_cat)
     return category_uls
+
 link_categories_books= scrape_category_uls()
 link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
 #print(link_categories_books)
@@ -68,9 +74,13 @@ def scrape_category_books(category_url):
         else:
             break
     return book_urls
-for links in link_categories_books:
-   all_books_url=scrape_category_books(links)
-   break
+if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"  in link_categories_books:
+   url ="https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
+   cat_books_urls=scrape_category_books(url)
+   cat_books_data=[]
+   for link_b in cat_books_urls:
+       cat_books_data.append(scrape_book(link_b))
+       print(cat_books_data)
    #print(all_books_url)
     
 

@@ -2,22 +2,27 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
+
+
 def scrape_book(book_url):
     reponse = requests.get(url)
     page = reponse.content
     soup = BeautifulSoup(page, "html.parser")
     td_list = soup.find_all("td")
-    print(td_list)
-    print(book_url)
-    book_data = {"url": book_url, "title": soup.h1.text, "upc": td_list[0].text, "price_including_tax": td_list[3].text,
-                 "price_excluding_tax": td_list[2].text, "number_available": td_list[5].text}
-    p_list = soup.find_all("p")
-    book_data["product_description"] = p_list[3].text
-    a_list = soup.find_all("a")
-    book_data["category"] = a_list[3].text
-    book_data["review_rating"] = soup.find("p", class_="star-rating").attrs["class"][1]
-    book_data["image_url"] = soup.find("img")["src"]
+    book_data = {}
+    book_data ["title"]=soup.h1.text
+    book_data ["upc"]=td_list[0].text
+    book_data ["price_including_tax"]=td_list[3].text
+    book_data ["price_excluding_tax"]=td_list[2].text
+    book_data["number_available"] = td_list[5].text
+    p_list=soup.find_all('p')
+    book_data['product_description']=p_list[3].text
+    a_list= soup.find_all("a")
+    book_data["category"]= a_list[3].text
+    book_data["review_rating"]= soup.find ("p",class_="star-rating").attrs["class"] [1]
+    book_data ["image_url"] = soup.find('img')["src"]
     return book_data
+     
 
 def scrape_category_uls():
     category_uls = []
@@ -31,6 +36,7 @@ def scrape_category_uls():
         les_urls_cat = "https://books.toscrape.com/" + a_tag
         category_uls.append(les_urls_cat)
     return category_uls
+book_site = "https://books.toscrape.com/" 
 
 def scrape_category_books(category_url):
     book_urls = []
@@ -56,6 +62,9 @@ def scrape_category_books(category_url):
         else:
             break
     return book_urls
+link_categories_books= scrape_category_uls()
+link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
+#print(link_categories_books)
 
 url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
 rows = [scrape_book(url)]
@@ -67,19 +76,16 @@ with open('live_data5.csv', mode='w') as csv_file:
         writer.writeheader()
         writer.writerow(scrape_book(url))
 #data_book_csv()
-link_categories_books= scrape_category_uls()
-link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
 
 if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"  in link_categories_books:
-   url ="https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
-   cat_books_urls=scrape_category_books(url)
+   book_url ="https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
+   cat_books_urls=scrape_category_books(book_url)
    cat_books_data=[]
    for link_b in cat_books_urls:
        cat_books_data.append(scrape_book(link_b))
        print(cat_books_data)
 
 
-book_site = "https://books.toscrape.com/"
 
 
 #print(link_categories_books)

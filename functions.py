@@ -66,7 +66,16 @@ link_categories_books= scrape_category_uls()
 link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
 #print(link_categories_books)
 
-url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+#url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
+
+if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"  in link_categories_books:
+  cat_url ="https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
+  cat_books_urls=scrape_category_books(cat_url)
+  cat_books_data=[]
+for url in cat_books_urls:
+    cat_books_data.append(scrape_book(url))
+    print(cat_books_data)
+
 rows = [scrape_book(url)]
 with open('live_data5.csv', mode='w') as csv_file:
         fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
@@ -76,15 +85,6 @@ with open('live_data5.csv', mode='w') as csv_file:
         writer.writeheader()
         writer.writerow(scrape_book(url))
 #data_book_csv()
-
-if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"  in link_categories_books:
-   book_url ="https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
-   cat_books_urls=scrape_category_books(book_url)
-   cat_books_data=[]
-   for link_b in cat_books_urls:
-       cat_books_data.append(scrape_book(link_b))
-       print(cat_books_data)
-
 
 
 

@@ -74,16 +74,16 @@ if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.h
   cat_books_data=[]
 for url in cat_books_urls:
     cat_books_data.append(scrape_book(url))
-    print(cat_books_data)
+    #print(cat_books_data)
 
 rows = [scrape_book(url)]
-with open('live_data5.csv', mode='w') as csv_file:
-        fieldnames = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
+with open('cat_data_book3.csv', mode='w') as csv_file:
+        headers = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
 
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames,delimiter=',')
+        writer = csv.DictWriter(csv_file, fieldnames=headers,delimiter=',')
 
         writer.writeheader()
-        writer.writerow(scrape_book(url))
+        writer.writerows(cat_books_data)
 #data_book_csv()
 
 

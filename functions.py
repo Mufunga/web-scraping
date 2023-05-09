@@ -77,7 +77,7 @@ for url in cat_books_urls:
     #print(cat_books_data)
 
 rows = [scrape_book(url)]
-with open('cat_data_book3.csv', mode='w') as csv_file:
+with open('cat_data_book4.csv', mode='w', encoding="utf-8") as csv_file:
         headers = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
 
         writer = csv.DictWriter(csv_file, fieldnames=headers,delimiter=',')

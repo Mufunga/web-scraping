@@ -1,11 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-
+import os
+BOOK_SITE ="https://books.toscrape.com/"
+#path = "C:/Users/MufungaK/Documents/OC/LIVRAIBLE/projet_2/csv_dir"
+#os.mkdir(path)
+#print(path)
 
 
 def scrape_book(book_url):
-    reponse = requests.get(url)
+    reponse = requests.get(url_book)
     page = reponse.content
     soup = BeautifulSoup(page, "html.parser")
     td_list = soup.find_all("td")
@@ -24,9 +28,9 @@ def scrape_book(book_url):
     return book_data
      
 
-def scrape_category_uls():
+def get_categories_urls():
     category_uls = []
-    response = requests.get(book_site)
+    response = requests.get(BOOK_SITE)
     page_cat = response.content
     soup = BeautifulSoup(page_cat, "html.parser")
     ul_tag = soup.find("ul", class_="nav-list")
@@ -36,9 +40,10 @@ def scrape_category_uls():
         les_urls_cat = "https://books.toscrape.com/" + a_tag
         category_uls.append(les_urls_cat)
     return category_uls
-book_site = "https://books.toscrape.com/" 
 
-def scrape_category_books(category_url):
+
+def get_books_urls_from_category(category_url):
+    """Return the books urls_from_category"""
     book_urls = []
     a_tag_temp = "index.html"
     while True:
@@ -62,28 +67,63 @@ def scrape_category_books(category_url):
         else:
             break
     return book_urls
-link_categories_books= scrape_category_uls()
-link_categories_books.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
+def main():
+
+    """Main function"""
+
+
+    # Récupération de toutes les catés
+    categories_urls = get_categories_urls()
+    categories_urls.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
+
+
+    # Pour chaque catégorie
+    for category_url in categories_urls:
+
+    #    Récupérer les urls de tous les livres de la catégorie
+        books_urls_by_category = get_books_urls_from_category(category_url)
+    #    Pour chaque urls des livres
+        for url_book in books_urls_by_category:
+    #        Récupérer les data de chaque livre
+            all_books_data = scrape_book(url_book)
+            print (all_books_data)
+
+    
+
+
+
+    #    Sauvegarder en csv
+
+    #    Récupérer les images
+
+link_categories_books= get_categories_urls()
 #print(link_categories_books)
 
 #url = "https://books.toscrape.com/catalogue/scott-pilgrims-precious-little-life-scott-pilgrim-1_987/index.html"
 
 if "https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"  in link_categories_books:
   cat_url ="https://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
-  cat_books_urls=scrape_category_books(cat_url)
+  cat_books_urls=get_books_urls_from_category(cat_url)
   cat_books_data=[]
 for url in cat_books_urls:
-    cat_books_data.append(scrape_book(url))
+   cat_books_data.append(scrape_book(url))
     #print(cat_books_data)
 
 rows = [scrape_book(url)]
-with open('cat_data_book4.csv', mode='w', encoding="utf-8") as csv_file:
+with open('C:/Users/MufungaK/Documents/OC/LIVRAIBLE/projet_2/csv_dir/cat_data_book4.csv', mode='w', encoding="utf-8") as csv_file:
         headers = ["url", "title", "upc", "price_including_tax", "price_excluding_tax", "number_available","product_description","category",  "review_rating",  "image_url"]
 
         writer = csv.DictWriter(csv_file, fieldnames=headers,delimiter=',')
 
         writer.writeheader()
         writer.writerows(cat_books_data)
+#data_book_csv()
+
+
+#if __name__ == "__main__":
+
+    #main()
+    
 #data_book_csv()
 
 

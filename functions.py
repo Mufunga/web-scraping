@@ -5,8 +5,7 @@ from pathlib import Path
 BOOK_SITE ="https://books.toscrape.com/"
 CSV_DIR= "C:/Users/MufungaK/Documents/OC/LIVRAIBLE/projet_2/data/csv"
 IMG_DIR = "C:/Users/MufungaK/Documents/OC/LIVRAIBLE/projet_2/data/img"
-#os.mkdir(path)
-#print(path)
+
 
 def get_categories_urls():
     category_uls = []
@@ -67,6 +66,26 @@ def scrape_book(book_urls):
     book_data["review_rating"]= soup.find ("p",class_="star-rating").attrs["class"] [1]
     book_data ["image_url"] = soup.find('img')["src"]
     return book_data
+
+
+def image_down(url_book):
+    reponse = requests.get(url_book)
+    page = reponse.content
+    soup = BeautifulSoup(page, "html.parser")
+    image_container = soup.find_all("div", class_="image_container")
+    i = 1
+    for elments in image_container:
+        a_tag = elments.find("a")
+        img_tag = a_tag.find("img")["src"]
+        path = img_tag.split("../")[4]
+        img_path = "https://books.toscrape.com/" + path
+        link = requests.get(img_path)
+        f = str(i)
+        f = open(f"book_imag_{i}.jpeg", "wb")
+        i += 1
+        f.write(link.content)
+        f.close
+
 
 
 def save_book_data_to_csv(book_data:list[dict]):

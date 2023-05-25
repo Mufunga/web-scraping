@@ -71,22 +71,22 @@ def scrape_book(book_urls):
 
 
 def image_down(url_book):
+    book_data :list[dict]
+    title =slugify (book_data[0].get("title"))
     reponse = requests.get(url_book)
     page = reponse.content
     soup = BeautifulSoup(page, "html.parser")
     image_container = soup.find_all("div", class_="image_container")
-    i = 1
+   
     for elments in image_container:
         a_tag = elments.find("a")
         img_tag = a_tag.find("img")["src"]
         path = img_tag.split("../")[4]
         img_path = "https://books.toscrape.com/" + path
         link = requests.get(img_path)
-        f = str(i)
-        f = open(f"book_imag_{i}.jpeg", "wb")
-        i += 1
-        f.write(link.content)
-        f.close
+        with open(f"{IMG_DIR}/{title}.jpeg", "wb") as img_file:
+            img_file.write(link.content)
+            img_file.close
 
 
 
@@ -110,6 +110,7 @@ def main():
     categories_urls.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
 
     Path(CSV_DIR).mkdir(parents=True, exist_ok=True)
+    Path(IMG_DIR).mkdir(parents=True, exist_ok=True)
 
     # Pour chaque catégorie
     for category_url in categories_urls:
@@ -123,11 +124,11 @@ def main():
             book_data = scrape_book(url_book)
             books_data.append(book_data)
     #    Sauvegarder en csv
-            save_book_data_to_csv(books_data)
-            for url_book in books_urls_by_category:
+        save_book_data_to_csv(books_data)
+        for url_book in books_urls_by_category:
+            image_down(url_book)
+           
 
-
-        
 
 if __name__ == "__main__":
     main()

@@ -2,9 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 from pathlib import Path
+from slugify import slugify
+
 BOOK_SITE ="https://books.toscrape.com/"
-CSV_DIR= "C:/Users/MufungaK/Documents/OC/LIVRAIBLE/projet_2/data/csv"
-IMG_DIR = "C:/Users/MufungaK/Documents/OC/LIVRAIBLE/projet_2/data/img"
+CSV_DIR= "data/csv"
+IMG_DIR = "data/img"
 
 
 def get_categories_urls():
@@ -89,9 +91,10 @@ def image_down(url_book):
 
 
 def save_book_data_to_csv(book_data:list[dict]):
-    Path(CSV_DIR).mkdir(parents=True, exist_ok=True)
+
     header = book_data[0].keys
-    with open("CSV_DIR" "books_data.csv", mode="w", encoding= "utf-8-sig", newline="") as file_csv:
+    category = slugify (book_data[0].get("category"))
+    with open(f"{CSV_DIR}/{category}.csv", mode="w", encoding= "utf-8-sig", newline="") as file_csv:
         writer= csv.DictWriter(file_csv, fieldnames= header,dialect= "excel")
         writer.writeheader()
         writer.writerows(book_data)
@@ -106,17 +109,25 @@ def main():
     categories_urls = get_categories_urls()
     categories_urls.remove('https://books.toscrape.com/catalogue/category/books_1/index.html')
 
+    Path(CSV_DIR).mkdir(parents=True, exist_ok=True)
+
     # Pour chaque catégorie
     for category_url in categories_urls:
 
     #    Récupérer les urls de tous les livres de la catégorie
         books_urls_by_category = get_books_urls_from_category(category_url)
     #    Pour chaque urls des livres
+        books_data: list = []
         for url_book in books_urls_by_category:
     #        Récupérer les data de chaque livre
-            all_books_data = scrape_book(url_book)
-        return all_books_data
-
+            book_data = scrape_book(url_book)
+            books_data.append(book_data)
     #    Sauvegarder en csv
-   
-    
+            save_book_data_to_csv(books_data)
+            for url_book in books_urls_by_category:
+
+
+        
+
+if __name__ == "__main__":
+    main()

@@ -125,6 +125,9 @@ def main():
             books_data.append(book_data)
     #    Sauvegarder en csv
         save_book_data_to_csv(books_data)
+        
+        #Boucle de recuperation de l'image et sauvegarde
+
         for url_book in books_urls_by_category:
             image_down(url_book)
            

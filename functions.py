@@ -70,29 +70,21 @@ def scrape_book(book_urls):
     return book_data
 
 
-def image_down(url_book):
-    book_data :list[dict]
-    title =slugify (book_data[0].get("title"))
-    reponse = requests.get(url_book)
-    page = reponse.content
-    soup = BeautifulSoup(page, "html.parser")
-    image_container = soup.find_all("div", class_="image_container")
-   
-    for elments in image_container:
-        a_tag = elments.find("a")
-        img_tag = a_tag.find("img")["src"]
-        path = img_tag.split("../")[4]
-        img_path = "https://books.toscrape.com/" + path
-        link = requests.get(img_path)
-        with open(f"{IMG_DIR}/{title}.jpeg", "wb") as img_file:
-            img_file.write(link.content)
+
+def image_down(book_data :list[dict]):
+    title =slugify (book_data.get("title"))
+    image_url = book_data.get("image_url")
+    image_path = "https://books.toscrape.com/" + image_url
+    rep =requests.get(image_path)
+
+    with open(f"{IMG_DIR}/{title}.jpeg", "wb") as img_file:
+            img_file.write(rep.content)
             img_file.close
-
-
-
+        
+        
 def save_book_data_to_csv(book_data:list[dict]):
 
-    header = book_data[0].keys
+    header = book_data[0].keys()
     category = slugify (book_data[0].get("category"))
     with open(f"{CSV_DIR}/{category}.csv", mode="w", encoding= "utf-8-sig", newline="") as file_csv:
         writer= csv.DictWriter(file_csv, fieldnames= header,dialect= "excel")
@@ -123,13 +115,14 @@ def main():
     #        Récupérer les data de chaque livre
             book_data = scrape_book(url_book)
             books_data.append(book_data)
+            
     #    Sauvegarder en csv
         save_book_data_to_csv(books_data)
-        
+
         #Boucle de recuperation de l'image et sauvegarde
 
-        for url_book in books_urls_by_category:
-            image_down(url_book)
+        for book in books_data:
+            image_down(book)
            
 
 

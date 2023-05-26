@@ -49,7 +49,6 @@ def get_books_urls_from_category(category_url):
             break
     return book_urls
 
-
 def scrape_book(book_urls):
     reponse = requests.get(book_urls)
     page = reponse.content

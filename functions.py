@@ -60,20 +60,48 @@ def scrape_book(book_urls):
     book_data ["price_including_tax"]=td_list[3].text
     book_data ["price_excluding_tax"]=td_list[2].text
     book_data["number_available"] = td_list[5].text
+    instock_split = book_data["number_available"].split()
+    split_availlable = slugify(instock_split[2])
+    book_data["number_available"] = split_availlable
     p_list=soup.find_all('p')
     book_data['product_description']=p_list[3].text
     a_list= soup.find_all("a")
     book_data["category"]= a_list[3].text
     book_data["review_rating"]= soup.find ("p",class_="star-rating").attrs["class"] [1]
+    if  book_data["review_rating"] == "One":
+         book_data["review_rating"]=1
+    elif  book_data["review_rating"] == "Two":
+         book_data["review_rating"]=2
+    elif  book_data["review_rating"] =="Three":
+         book_data["review_rating"]= 3
+    elif  book_data["review_rating"] == "Four":
+         book_data["review_rating"] = 4
+    elif book_data["review_rating"] == "Five":
+        book_data["review_rating"] = 5
+    else :
+         print()
+
     book_data ["image_url"] = soup.find('img')["src"]
+    url_split= book_data["image_url"].split("../")
+    book_data ["image_url"] = "https://books.toscrape.com/"+ url_split[2]
     return book_data
+
+#def transform_review_rating_to_number(review_rating :str) ->int :
+    #rating ={
+        #"one":1,
+        #"two": 2,
+        #"three": 3,
+        #"four": 4,
+        #"five" : 5
+   # }
+    #return rating.get(review_rating)
 
 
 
 def image_down(book_data :list[dict]):
     title =slugify (book_data.get("title"))
     image_url = book_data.get("image_url")
-    image_path = "https://books.toscrape.com/" + image_url
+    image_path = image_url
     rep =requests.get(image_path)
 
     with open(f"{IMG_DIR}/{title}.jpeg", "wb") as img_file:
@@ -114,6 +142,7 @@ def main():
     #        Récupérer les data de chaque livre
             book_data = scrape_book(url_book)
             books_data.append(book_data)
+            print(book_data["category"] + '  ' "data book  encours de telechargement veillez patientez...")
             
     #    Sauvegarder en csv
         save_book_data_to_csv(books_data)
@@ -127,3 +156,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    

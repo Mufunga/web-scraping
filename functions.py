@@ -9,6 +9,8 @@ CSV_DIR= "data/csv"
 IMG_DIR = "data/img"
 
 def get_soup(url: str) -> BeautifulSoup:
+    
+    """Test la connexion http et parrser le code html"""
     response = requests.get(url)
     if not response.ok:
         print("erreur")
@@ -18,6 +20,8 @@ def get_soup(url: str) -> BeautifulSoup:
 
 
 def get_categories_urls():
+
+    """Recupres les liens des urels de categories"""
     category_uls = []
     soup = get_soup(BOOK_SITE)
     ul_tag = soup.find("ul", class_="nav-list")
@@ -55,7 +59,8 @@ def get_books_urls_from_category(category_url):
     return book_urls
 
 def scrape_book(book_urls):
-    
+    """Contient les donnees d'un livre"""
+
     soup = get_soup(book_urls)
     td_list = soup.find_all("td")
     book_data = {}

@@ -9,7 +9,7 @@ CSV_DIR= "data/csv"
 IMG_DIR = "data/img"
 
 def get_soup(url: str) -> BeautifulSoup:
-    
+
     """Test la connexion http et parrser le code html"""
     response = requests.get(url)
     if not response.ok:
@@ -145,6 +145,7 @@ def main():
 
         for book in books_data:
             image_down(book)
+            print(book_data ["category"] + "recuperation des images ")
            
 
 

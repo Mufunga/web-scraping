@@ -145,7 +145,7 @@ def main():
 
         for book in books_data:
             image_down(book)
-            print(book_data ["category"] + "recuperation des images ")
+            print(book_data ["category"] +"  " "recuperation des images ")
            
 
 
